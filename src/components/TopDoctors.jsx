@@ -1,10 +1,13 @@
-import React from 'react'
-import { doctors } from '../assets/assets_frontend/assets'
+import React, { useContext } from 'react'
+// import { doctors } from '../assets/assets_frontend/assets'
 import { useNavigate } from 'react-router-dom'
+import App from '../App'
+import { AppContext } from '../context/AppContext'
 
 function TopDoctors() {
 
     const navigate = useNavigate()
+    const {doctors} = useContext(AppContext)
 
   return (
     <div className='flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10'>
@@ -16,7 +19,7 @@ function TopDoctors() {
             <img className='bg-blue-50' src={item.image} alt="" />
             <div className='p-4'>
                 <div className='flex items-center gap-2 text-sm text-center text-green-500'>
-                    <p className='w-2 h-2 bg-green-500 rounded-full'></p> <p>Available</p>
+                  <p className='w-2 h-2 bg-green-500 rounded-full'></p> <p>Available</p>
                 </div>
                 <p className='text-gray-900 text-lg font-medium'>{item.name}</p>
                 <p className='text-gray-600 text-sm' >{item.speciality}</p>
@@ -24,7 +27,7 @@ function TopDoctors() {
         </div>
        ))}
       </div>
-      <button className='px-12 py-3 rounded-full bg-blue-50 text-gray-600 mt-10'>more</button>
+      <button onClick={()=>{navigate('/doctors'); scrollTo(0,0)}} className='px-12 py-3 rounded-full bg-blue-50 text-gray-600 mt-10'>more</button>
     </div>
   )
 } 
