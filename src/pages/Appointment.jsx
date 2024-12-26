@@ -4,71 +4,60 @@ import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/assets_frontend/assets'
 
 function Appointment() {
-  const { docId } = useParams()
-  const { doctors, currencySymbol } = useContext(AppContext)
+  const { docId } = useParams();
+  const { doctors, currencySymbol } = useContext(AppContext);
 
-  const week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
-  const [docInfo, setDocInfo] = useState('');
+  const week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  const [docInfo, setDocInfo] = useState(null);
   const [docSlots, setDocSlots] = useState([]);
   const [slotIndex, setSlotIndex] = useState(0);
-  const [slotTime, setSlotTime] = useState('')
 
-  const fetchDocInfo = async () => {
-    const foundDoc = doctors.find(doc => doc._id === docId)
-    setDocInfo(foundDoc)
-  }
-
-  const getAvailableSlot = async () => {
-    setDocSlots([])
-    // for geting current date
-
-    let today = new Date()
-
-    for (let i = 0; i < 7; i++) {
-      let currentDate = new Date()
-      currentDate.setDate(today.getDate() + i)
-
-
-      //for end time 
-      let endTime = new Date()
-      endTime.setDate(today.getDate() + i)
-      endTime.setHours(21, 0, 0, 0)
-
-      //for hours
-
-      if (today.getDate() === currentDate.getDate()) {
-        currentDate.setHours(currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10)
-        currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0)
-      }
-      else {
-        currentDate.setHours(10);
-        currentDate.setMinutes(0)
-      }
-      let timeSlot = [];
-      while (currentDate < endTime) {
-        let time = currentDate.toLocaleTimeString([], { hour: '2-digit', mitutes: '2-digit' })
-        //adding slot to arr
-        timeSlot.push({
-          datetime: new Date(currentDate),
-          time: time
-        })
-        currentDate.setMinutes(currentDate.getMinutes() + 30);
-      } 
-    setDocSlots(prev => ([...prev, timeSlot]))
-  }
-  }
-
+  // Fetch doctor information
   useEffect(() => {
-    fetchDocInfo()
-  }, [doctors, docId])
+    if (doctors.length > 0) {
+      const foundDoc = doctors.find(doc => doc._id === docId);
+      setDocInfo(foundDoc || null);
+    }
+  }, [doctors, docId]);
 
+  // Generate available slots
   useEffect(() => {
-    getAvailableSlot()
-  }, [docSlots])
+    if (!docInfo) return;
 
-  // useEffect(() => {
-  //   console.log(docSlots)
-  // }, [docSlots])
+    const generateSlots = () => {
+      const slots = [];
+      const today = new Date();
+
+      for (let i = 0; i < 7; i++) {
+        const currentDate = new Date();
+        currentDate.setDate(today.getDate() + i);
+
+        const endTime = new Date(currentDate);
+        endTime.setHours(21, 0, 0, 0);
+
+        if (i === 0) {
+          currentDate.setHours(Math.max(currentDate.getHours(), 10));
+          currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
+        } else {
+          currentDate.setHours(10, 0, 0, 0);
+        }
+
+        const timeSlot = [];
+        while (currentDate < endTime) {
+          timeSlot.push({
+            datetime: new Date(currentDate),
+            time: currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          });
+          currentDate.setMinutes(currentDate.getMinutes() + 30);
+        }
+        slots.push(timeSlot);
+      }
+
+      setDocSlots(slots);
+    };
+
+    generateSlots();
+  }, [docInfo]);
 
   return docInfo && (
     <div className=''>
@@ -121,3 +110,5 @@ function Appointment() {
 }
 
 export default Appointment
+
+
