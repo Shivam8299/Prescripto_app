@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { AppContext } from '../context/AppContext'
-import { assets } from '../assets/assets_frontend/assets'
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
+import { assets } from '../assets/assets_frontend/assets';
+import ReletedDoctors from '../components/ReletedDoctors';
 
 function Appointment() {
   const { docId } = useParams();
@@ -11,6 +12,7 @@ function Appointment() {
   const [docInfo, setDocInfo] = useState(null);
   const [docSlots, setDocSlots] = useState([]);
   const [slotIndex, setSlotIndex] = useState(0);
+  const [selectedTime, setSelectedTime] = useState(null); // Track selected time slot
 
   // Fetch doctor information
   useEffect(() => {
@@ -23,7 +25,6 @@ function Appointment() {
   // Generate available slots
   useEffect(() => {
     if (!docInfo) return;
-
     const generateSlots = () => {
       const slots = [];
       const today = new Date();
@@ -43,6 +44,7 @@ function Appointment() {
         }
 
         const timeSlot = [];
+
         while (currentDate < endTime) {
           timeSlot.push({
             datetime: new Date(currentDate),
@@ -61,12 +63,12 @@ function Appointment() {
 
   return docInfo && (
     <div className=''>
-      {/* doctor's details  */}
-      <div className='sm:flex flelx-col sm:flex-row gap-4 '>
+      {/* doctor's details */}
+      <div className='sm:flex flelx-col sm:flex-row gap-4'>
         <div>
           <img className='w-full h-84 sm:h-96 bg-primary sm:max-w-72 sm:rounded-lg' src={docInfo.image} alt="" />
         </div>
-        <div className='w-full sm:flex-1 border border-gray-400 h-84  sm:rounded-lg p-8 py-7 bg-white sm:mx-0 mt-2 sm:mt-0'>
+        <div className='w-full sm:flex-1 border border-gray-400 h-84 sm:rounded-lg p-8 py-7 bg-white sm:mx-0 mt-2 sm:mt-0'>
           {/* docInfo name speciality degree experience */}
           <p className='flex items-center gap-2 text-2xl lg:text-3xl font-medium text-gray-900'>{docInfo.name} <img className='w-5' src={assets.verified_icon} alt="" /></p>
           <div className='flex flex-center gap-2 text-sm lg:text-lg mt-1 lg:mt-2 text-gray-600'>
@@ -94,21 +96,26 @@ function Appointment() {
               <p>{item[0] && week[item[0].datetime.getDay()]}</p>
               <p>{item[0] && item[0].datetime.getDay()}</p>
             </div>
-          ))
-          }
+          ))}
         </div>
-        <div>
-          {docSlots.length && docSlots[slotIndex].map((item,index)=>(
-            <p key={index}>
-              {item.time.toLowerCase()}
+
+        <div className='flex items-center gap-3 w-full overflow-x-scroll mt-4'>
+          {docSlots.length && docSlots[slotIndex].map((item, index) => (
+            <p 
+              onClick={() => setSelectedTime(item.time)} // Set selected time on click
+              className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === selectedTime ? 'bg-primary text-white' : 'text-gray-400 border border-gray-300'}`} 
+              key={index}
+            >
+               {item.time.toLowerCase() > '12' ? `${item.time.toLowerCase() } pm` : `${item.time.toLowerCase() } am`} 
             </p>
           ))}
         </div>
+        <button className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6'> Book an appointment</button>
       </div>
+      {/* listing doctor releted part */}
+      <ReletedDoctors docId = {docId} speciality = {docInfo.speciality} />
     </div>
-  )
+  );
 }
 
-export default Appointment
-
-
+export default Appointment;
