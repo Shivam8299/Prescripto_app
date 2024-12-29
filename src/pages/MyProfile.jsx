@@ -3,10 +3,10 @@ import { assets } from '../assets/assets_frontend/assets'; // Verify this path!
 
 function MyProfile() {
   const [userData, setUserData] = useState({
-    name: 'Arav',
+    name: 'Shivam Mishra',
     image: assets.profile_pic, // Ensure this is correctly exported
     email: 'arav123@email.com',
-    phone: '91 9452343542',
+    phone: '+919452343542',
     address: {
       line1: 'Sector 53, Richmond',
       line2: 'Goal Cauraha, Indra Nagar'
@@ -22,12 +22,12 @@ function MyProfile() {
       <img className='w-36 rounded' src={userData.image}/>
       {
         isEdit
-          ? <input className='bg-gray-50 text-3xl font-medium max-w-60 mt-4' type="text" value={userData.name} onChange={e => setUserData(prev => ({ ...prev, name: e.target.value }))} />
-          : <p className='font-medium text-3xl text-neutral-800 mt-4'>{userData.name}</p>
+          ? <input className='bg-gray-50 text-3xl font-medium max-w-60 mt-4 mb-4' type="text" value={userData.name} onChange={e => setUserData(prev => ({ ...prev, name: e.target.value }))} />
+          : <p className='font-medium text-3xl text-neutral-800 mt-4 mb-4'>{userData.name}</p>
       }
       <hr  className='bg-zinc-400 h-[1px] border-none'/>
       <div>
-        <p className='text-neutral-500 underline mt-3 mb-3'>CONTACT INFORMATION</p>
+        <p className='text-neutral-500 underline mt-4 mb-3'>CONTACT INFORMATION</p>
         <div className='grid grid-cols-[1fr_3fr] gap-y-2.5 text-neutral-700'>
           <p className='font-medium'>Email:</p>
           <p className='text-blue-500'>{userData.email}</p>
