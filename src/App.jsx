@@ -23,8 +23,8 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/about' element={<About />} />
-        <Route path='/profile' element={< MyProfile/>}/>
-        <Route path='/my-appointment' element={<MyAppointment />} />
+        <Route path='/My-profile' element={<MyProfile/>}/> 
+        <Route path='/my-appointments' element={<MyAppointment />} />
         <Route path='/appointment/:docId' element={<Appointment />} />
       </Routes>
       <Footer />
