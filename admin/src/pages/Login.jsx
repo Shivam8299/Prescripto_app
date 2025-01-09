@@ -18,6 +18,7 @@ function Login() {
             if (data.success) {
                 setAToken(data.token);
                 console.log(`${userType} logged in successfully`);
+                console.log(data.token)
                 // Redirect or perform further actions
             }
         } catch (error) {
